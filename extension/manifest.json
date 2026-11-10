@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Resident Conversation Autofill",
+  "version": "2.1.4",
+  "description": "Fills or auto-submits the Georgia Tech Roompact Resident Conversation form, then opens the next RC26-27 form.",
+  "action": {
+    "default_title": "Resident Conversation Autofill",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["https://roompact.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://roompact.com/forms/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

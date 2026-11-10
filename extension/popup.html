@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resident Conversation</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1>Resident Conversation</h1>
+    <p class="subtitle">Fill and Start always begin with the resident selected below. Fill writes fields only and does not submit. Start fills, submits, then reopens #/form/7jr4al and continues down the list. Stop aborts at the next checkpoint.</p>
+  </header>
+
+  <details class="test-gates">
+    <summary>Live test order — do these before letting Start run</summary>
+    <ol>
+      <li>Pick the resident to start from, then use <strong>Fill form</strong> once and check the fields. Do not use Start yet. Fill advances Next from that person; re-select them before Start if you want to file the same person.</li>
+      <li>Use <strong>Start</strong>, then <strong>Stop</strong> immediately. Confirm Submit was not clicked.</li>
+      <li>Watch one full cycle, then Stop before the second Submit: fill → Submit → URL becomes #/submission/… → then back to #/form/7jr4al → next fill begins. Confirm exactly one new RC26-27.</li>
+      <li>Only then let Start run more than one, preferably with a short CSV.</li>
+    </ol>
+  </details>
+
+  <label for="resident">Resident</label>
+  <select id="resident"></select>
+
+  <button id="fill" type="button">Fill form</button>
+  <div class="button-row">
+    <button id="start" type="button">Start</button>
+    <button id="stop" type="button" class="stop" disabled>Stop</button>
+  </div>
+  <p id="status" role="status"></p>
+
+  <script src="popup.js"></script>
+</body>
+</html>

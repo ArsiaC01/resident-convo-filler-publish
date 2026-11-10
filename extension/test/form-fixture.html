@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resident Conversation (fixture)</title>
+  <style>
+    :root {
+      --navy: #003057;
+      --border: #d5dbe0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 15px/1.4 system-ui, Segoe UI, sans-serif;
+      color: #222;
+      background: #f4f5f7;
+    }
+    #test-bar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: end;
+      padding: 10px 16px;
+      background: var(--navy);
+      color: #fff;
+    }
+    #test-bar label { font-size: 12px; display: grid; gap: 4px; }
+    #test-bar select {
+      min-width: 180px;
+      padding: 6px 8px;
+    }
+    #test-bar button {
+      padding: 8px 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #test-status { flex: 1 1 220px; font-size: 13px; }
+    .page {
+      max-width: 720px;
+      margin: 24px auto;
+      padding: 0 16px 48px;
+    }
+    h2 { color: var(--navy); margin-bottom: 8px; }
+    .forms-submission-template-description { color: #555; margin-bottom: 24px; }
+    .form-submission-field-group-body,
+    .forms-submission-field-group-body-margin-top {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin: 0 0 14px;
+    }
+    .forms-field-label-display { display: block; font-weight: 600; margin-bottom: 8px; }
+    .forms-ghost-textarea { display: none; }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #c5ccd3;
+      border-radius: 4px;
+      font: inherit;
+    }
+    .forms-tag-search-input-container { position: relative; }
+    .forms-tag-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+    .forms-tag-chip,
+    .forms-submission-tag-item {
+      background: #333;
+      color: #fff;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-block;
+      margin: 4px 8px 4px 0;
+    }
+    .forms-subscriptions-search-result-container {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      max-height: 250px;
+      overflow-y: auto;
+      background: #fff;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      z-index: 5;
+    }
+    .forms-subscriptions-search-result-row {
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    .forms-subscriptions-search-result-row:hover { background: #efefef; }
+    .forms-submit-btn { margin-top: 8px; padding: 8px 16px; }
+    .forms-submit-btn-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .req { color: red; }
+    .hint { color: #666; font-weight: 400; font-size: 13px; margin: 0 0 8px; }
+    .submitted-note { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 16px; }
+  </style>
+</head>
+<body>
+  <div id="test-bar">
+    <label>Resident
+      <select id="test-resident">
+        <option value="Mason|Erickson">Mason Erickson</option>
+        <option value="Joselin|Garcia">Joselin Garcia</option>
+        <option value="Jimena|Garcia Nuno">Jimena Garcia Nuno</option>
+        <option value="Camille Hoi Man|Mak">Camille Hoi Man Mak</option>
+      </select>
+    </label>
+    <button id="test-fill" type="button">Test fill</button>
+    <button id="test-start" type="button">Test start loop</button>
+    <button id="test-stop" type="button">Stop</button>
+    <div id="test-status" role="status">Submit goes to #/submission/&lt;id&gt; so the loop can reopen #/form/7jr4al.</div>
+  </div>
+
+  <div id="view-form" class="page">
+    <h2>Resident Conversation (RC26-27)</h2>
+    <div class="forms-submission-template-description">
+      <p>Fixture copied from the Roompact Resident Conversation form structure for local autofill testing.</p>
+    </div>
+
+    <div class="form-submission-field-group-body forms-submission-field-group-body-margin-top">
+      <div class="forms-field-control label-and-permissions-container">
+        <span class="forms-field-label-display"><span>Resident Name:<span class="req"> *</span></span></span>
+      </div>
+      <p class="hint">Tag the resident name here.</p>
+      <textarea class="md-textarea forms-textarea forms-ghost-textarea" aria-label="ghost textarea"></textarea>
+      <div class="forms-field-bottom-spacing">
+        <div class="forms-tag-search-input-container" data-tag-field="residents">
+          <div class="forms-tag-chips"></div>
+          <input type="text" class="forms-long-input forms-tag-search-input" id="forms-tag-search-input-div" aria-label="Tag Residents" placeholder="Tag Residents" autocomplete="off">
+          <div class="forms-subscriptions-search-result-container" hidden></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-submission-field-group-body forms-submission-field-group-body-margin-top">
+      <div class="forms-field-control label-and-permissions-container">
+        <span class="forms-field-label-display"><span>Tag the Building<span class="req"> *</span></span></span>
+      </div>
+      <textarea class="md-textarea forms-textarea forms-ghost-textarea" aria-label="ghost textarea"></textarea>
+      <div class="forms-field-bottom-spacing">
+        <div class="forms-tag-search-input-container" data-tag-field="buildings">
+          <div class="forms-tag-chips"></div>
+          <input type="text" class="forms-long-input forms-tag-search-input" aria-label="Tag Buildings" placeholder="Tag Buildings" autocomplete="off">
+          <div class="forms-subscriptions-search-result-container" hidden></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-submission-field-group-body forms-submission-field-group-body-margin-top">
+      <div class="forms-field-control label-and-permissions-container">
+        <span class="forms-field-label-display"><span>Student Population:<span class="req"> *</span></span></span>
+      </div>
+      <textarea class="md-textarea forms-textarea forms-ghost-textarea" aria-label="ghost textarea"></textarea>
+      <div class="forms-field-bottom-spacing">
+        <div class="forms-tag-search-input-container" data-tag-field="populations">
+          <div class="forms-tag-chips"></div>
+          <input type="text" class="forms-long-input forms-tag-search-input" aria-label="Tag Student Populations" placeholder="Tag Student Populations" autocomplete="off">
+          <div class="forms-subscriptions-search-result-container" hidden></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-submission-field-group-body forms-submission-field-group-body-margin-top">
+      <div class="forms-field-control label-and-permissions-container">
+        <span class="forms-field-label-display"><span>Date of your conversation:<span class="req"> *</span></span></span>
+      </div>
+      <textarea class="md-textarea forms-textarea forms-ghost-textarea" aria-label="ghost textarea"></textarea>
+      <div class="forms-field-bottom-spacing">
+        <div class="elm-datepicker--container">
+          <input class="elm-datepicker--input" type="text" aria-label="Enter date for Date of your conversation:" placeholder="mm/dd/yyyy">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-submission-field-group-body forms-submission-field-group-body-margin-top">
+      <div class="forms-field-control label-and-permissions-container">
+        <span class="forms-field-label-display"><span>Summary Notes:<span class="req"> *</span></span></span>
+      </div>
+      <p class="hint">Describe the conversation that you had with the resident.</p>
+      <div class="forms-field-bottom-spacing">
+        <textarea placeholder="Paragraph response" class="forms-textarea md-textarea" aria-label="Summary Notes:"></textarea>
+      </div>
+    </div>
+
+    <div class="form-submission-field-group-body forms-submission-field-group-body-margin-top">
+      <div class="forms-field-control label-and-permissions-container">
+        <span class="forms-field-label-display"><span>What theme(s) arose in your conversation?<span class="req"> *</span></span></span>
+      </div>
+      <textarea class="md-textarea forms-textarea forms-ghost-textarea" aria-label="ghost textarea"></textarea>
+      <div class="forms-field-bottom-spacing">
+        <div class="forms-tag-search-input-container" data-tag-field="themes">
+          <div class="forms-tag-chips"></div>
+          <input type="text" class="forms-long-input forms-tag-search-input" aria-label="Tag Not Applicable or Wellness Dimensions" placeholder="Tag Not Applicable or Wellness Dimensions" autocomplete="off">
+          <div class="forms-subscriptions-search-result-container" hidden></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-submission-field-group-body forms-submission-field-group-body-margin-top">
+      <div class="forms-field-control label-and-permissions-container">
+        <span class="forms-field-label-display"><span>What offices (if any) did you refer the resident to?</span></span>
+      </div>
+      <div class="forms-tag-search-input-container" data-tag-field="referrals">
+        <div class="forms-tag-chips"></div>
+        <input type="text" class="forms-long-input forms-tag-search-input" aria-label="Tag GT Office Referrals" placeholder="Tag GT Office Referrals" autocomplete="off">
+        <div class="forms-subscriptions-search-result-container" hidden></div>
+      </div>
+    </div>
+
+    <div class="form-submission-field-group-body forms-submission-field-group-body-margin-top">
+      <div class="forms-field-control label-and-permissions-container">
+        <span class="forms-field-label-display"><span>Any follow-up actions required?</span></span>
+      </div>
+      <textarea placeholder="Paragraph response" class="forms-textarea md-textarea" aria-label="Any follow-up actions required?"></textarea>
+    </div>
+
+    <div class="form-submission-field-group-body forms-submission-field-group-body-margin-top">
+      <div class="forms-field-control label-and-permissions-container">
+        <span class="forms-field-label-display"><span>Tag your supervisor's name if you think this requires follow-up intervention</span></span>
+      </div>
+      <div class="forms-tag-search-input-container" data-tag-field="staff">
+        <div class="forms-tag-chips"></div>
+        <input type="text" class="forms-long-input forms-tag-search-input" aria-label="Tag Staff" placeholder="Tag Staff" autocomplete="off">
+        <div class="forms-subscriptions-search-result-container" hidden></div>
+      </div>
+    </div>
+
+    <div class="notify-users-container">
+      <input type="checkbox" id="email-copy">
+      <label for="email-copy">Email author a copy of this submission revision (email will only show responses recipient is allowed to view).</label>
+    </div>
+    <button class="btn forms-submit-btn forms-submit-btn-disabled" type="button" title="Click to submit form">Submit</button>
+  </div>
+
+  <div id="view-submitted" class="page" hidden>
+    <div class="submitted-note">
+      <h2>Submission received</h2>
+      <p>Opened <code>#/submission/&lt;id&gt;</code>. The loop should reopen <code>#/form/7jr4al</code>.</p>
+    </div>
+  </div>
+
+  <script src="../content.js"></script>
+  <script>
+    const RESIDENT_SUGGESTIONS = [
+      "Mason Erickson",
+      "Joselin Garcia",
+      "Jimena Garcia Nuno",
+      "Camille Hoi Man Mak",
+      "Ethan Koh",
+    ];
+    const BUILDING_SUGGESTIONS = ["North Avenue North (NAN)", "North Avenue West (NAW)"];
+    const POPULATION_SUGGESTIONS = ["Upperclass (2/3/4/5th)", "First Year"];
+    const THEME_SUGGESTIONS = ["Not Applicable", "Physical Wellness", "Emotional Wellness"];
+    const REFERRAL_SUGGESTIONS = ["Counseling Center", "Academic Advising"];
+    const STAFF_SUGGESTIONS = ["Example Supervisor"];
+    const views = {
+      form: document.getElementById("view-form"),
+      submitted: document.getElementById("view-submitted"),
+    };
+    const status = document.getElementById("test-status");
+    const submitBtn = document.querySelector("#view-form .forms-submit-btn");
+    let nextSubmissionId = 1001;
+
+    function currentView() {
+      return location.hash.includes("/form/") ? "form" : "submitted";
+    }
+
+    function showView(name) {
+      Object.entries(views).forEach(([key, el]) => {
+        el.hidden = key !== name;
+      });
+    }
+
+    function syncFromHash() {
+      showView(currentView());
+    }
+
+    function go(hash) {
+      if (location.hash !== hash) {
+        location.hash = hash;
+      }
+      syncFromHash();
+    }
+
+    function formIsValid() {
+      return Boolean(
+        document.querySelector('[data-tag-field="residents"] .forms-submission-tag-item') &&
+          document.querySelector('[data-tag-field="buildings"] .forms-submission-tag-item') &&
+          document.querySelector('[data-tag-field="populations"] .forms-submission-tag-item') &&
+          document.querySelector(".elm-datepicker--input")?.value.trim() &&
+          document.querySelector('[aria-label="Summary Notes:"]')?.value.trim() &&
+          document.querySelector('[data-tag-field="themes"] .forms-submission-tag-item')
+      );
+    }
+
+    function updateSubmitState() {
+      if (formIsValid()) {
+        submitBtn.classList.remove("forms-submit-btn-disabled");
+      } else {
+        submitBtn.classList.add("forms-submit-btn-disabled");
+      }
+    }
+
+    function resetForm() {
+      document.querySelectorAll("#view-form .forms-tag-chips").forEach((el) => {
+        el.innerHTML = "";
+      });
+      document.querySelectorAll("#view-form input[type=text], #view-form textarea:not(.forms-ghost-textarea)").forEach((el) => {
+        el.value = "";
+      });
+      updateSubmitState();
+    }
+
+    function bindTagSearch(container, suggestions) {
+      const input = container.querySelector("input");
+      const list = container.querySelector(".forms-subscriptions-search-result-container");
+      const chips = container.querySelector(".forms-tag-chips");
+      let searchTimer = null;
+
+      function addChip(label) {
+        if ([...chips.querySelectorAll(".forms-submission-tag-item, .forms-tag-chip")].some((c) => c.textContent === label)) {
+          return;
+        }
+        const chip = document.createElement("span");
+        chip.className = "forms-submission-tag-item";
+        chip.textContent = label;
+        chips.appendChild(chip);
+        input.value = "";
+        list.hidden = true;
+        list.innerHTML = "";
+        updateSubmitState();
+      }
+
+      function showRows(labels) {
+        list.innerHTML = "";
+        labels.forEach((label) => {
+          const item = document.createElement("div");
+          item.className = "forms-subscriptions-search-result-row";
+          item.tabIndex = 0;
+          item.textContent = label;
+          item.addEventListener("mousedown", (event) => {
+            event.preventDefault();
+            addChip(label);
+          });
+          item.addEventListener("click", () => addChip(label));
+          item.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              addChip(label);
+            }
+          });
+          list.appendChild(item);
+        });
+        list.hidden = false;
+      }
+
+      function render(query) {
+        const q = query.trim().toUpperCase();
+        clearTimeout(searchTimer);
+        list.innerHTML = "";
+        if (q.length < 3) {
+          list.hidden = true;
+          return;
+        }
+        const searching = document.createElement("div");
+        searching.className = "forms-subscriptions-search-result-row";
+        searching.textContent = "Searching...";
+        list.appendChild(searching);
+        list.hidden = false;
+        searchTimer = setTimeout(() => {
+          const matches = suggestions.filter((s) => s.toUpperCase().includes(q));
+          if (!matches.length) {
+            list.innerHTML = "";
+            const empty = document.createElement("div");
+            empty.className = "forms-subscriptions-search-result-row";
+            empty.textContent = "No results found";
+            list.appendChild(empty);
+            return;
+          }
+          showRows(matches);
+        }, 280);
+      }
+
+      input.addEventListener("input", () => render(input.value));
+      input.addEventListener("focus", () => render(input.value));
+    }
+
+    bindTagSearch(document.querySelector('[data-tag-field="residents"]'), RESIDENT_SUGGESTIONS);
+    bindTagSearch(document.querySelector('[data-tag-field="buildings"]'), BUILDING_SUGGESTIONS);
+    bindTagSearch(document.querySelector('[data-tag-field="populations"]'), POPULATION_SUGGESTIONS);
+    bindTagSearch(document.querySelector('[data-tag-field="themes"]'), THEME_SUGGESTIONS);
+    bindTagSearch(document.querySelector('[data-tag-field="referrals"]'), REFERRAL_SUGGESTIONS);
+    bindTagSearch(document.querySelector('[data-tag-field="staff"]'), STAFF_SUGGESTIONS);
+
+    document.querySelector(".elm-datepicker--input").addEventListener("input", updateSubmitState);
+    document.querySelector(".elm-datepicker--input").addEventListener("change", updateSubmitState);
+    document.querySelector('[aria-label="Summary Notes:"]').addEventListener("input", updateSubmitState);
+    new MutationObserver(updateSubmitState).observe(document.getElementById("view-form"), {
+      subtree: true,
+      childList: true,
+    });
+
+    submitBtn.addEventListener("click", () => {
+      if (submitBtn.classList.contains("forms-submit-btn-disabled")) {
+        return;
+      }
+      resetForm();
+      const submissionId = String(nextSubmissionId);
+      nextSubmissionId += 1;
+      status.textContent = "Submitted. Opened #/submission/" + submissionId + " so the loop can reopen #/form/7jr4al.";
+      go("#/submission/" + submissionId);
+    });
+
+    document.getElementById("test-fill").addEventListener("click", async () => {
+      const [first, last] = document.getElementById("test-resident").value.split("|");
+      const person = LOOP_QUEUE.find((row) => row.first === first && row.last === last) || LOOP_QUEUE[0];
+      status.textContent = "Filling…";
+      const result = await window.fillResidentConversation({
+        resident: {
+          first,
+          last,
+          date: person.date,
+          summary: person.summary,
+          building: person.building,
+          population: person.population,
+          theme: person.theme,
+        },
+      });
+      status.textContent = result.ok
+        ? result.message + (result.warnings?.length ? " " + result.warnings.join(" ") : "")
+        : result.error;
+    });
+
+    const LOOP_QUEUE = [
+      {
+        index: 0,
+        first: "Mason",
+        last: "Erickson",
+        label: "Mason Erickson",
+        date: "10/31/2026",
+        summary: "Talked with Mason about school, roommates, and settling in.",
+        building: "North Avenue North",
+        population: "Upperclass (2/3/4/5th)",
+        theme: "Not Applicable",
+      },
+      {
+        index: 1,
+        first: "Joselin",
+        last: "Garcia",
+        label: "Joselin Garcia",
+        date: "10/30/2026",
+        summary: "Talked with Joselin about classes and the first week back.",
+        building: "North Avenue West",
+        population: "First Year",
+        theme: "Physical Wellness",
+      },
+      {
+        index: 2,
+        first: "Jimena",
+        last: "Garcia Nuno",
+        label: "Jimena Garcia Nuno",
+        date: "10/29/2026",
+        summary: "Talked with Jimena about move-in and campus adjustment.",
+        building: "North Avenue North",
+        population: "Upperclass (2/3/4/5th)",
+        theme: "Emotional Wellness",
+      },
+      {
+        index: 3,
+        first: "Camille Hoi Man",
+        last: "Mak",
+        label: "Camille Hoi Man Mak",
+        date: "10/28/2026",
+        summary: "Talked with Camille about classes, the room, and how the week is going.",
+        building: "North Avenue West",
+        population: "First Year",
+        theme: "Not Applicable",
+      },
+    ];
+
+    document.getElementById("test-start").addEventListener("click", async () => {
+      const [first, last] = document.getElementById("test-resident").value.split("|");
+      const startAt = LOOP_QUEUE.findIndex((person) => person.first === first && person.last === last);
+      const queue = LOOP_QUEUE.slice(startAt >= 0 ? startAt : 0);
+      status.textContent = `Starting loop from ${queue[0].label}…`;
+      const result = await window.startResidentLoop(queue, { startIndex: queue[0].index });
+      if (!result.ok) {
+        status.textContent = result.error;
+      }
+    });
+
+    document.getElementById("test-stop").addEventListener("click", () => {
+      window.stopResidentLoop();
+      status.textContent = "Stop requested.";
+    });
+
+    window.addEventListener("hashchange", syncFromHash);
+    if (!location.hash) {
+      location.replace("#/form/7jr4al");
+    }
+    syncFromHash();
+    updateSubmitState();
+
+    if (new URLSearchParams(location.search).has("autorun")) {
+      document.getElementById("test-fill").click();
+    }
+  </script>
+</body>
+</html>
